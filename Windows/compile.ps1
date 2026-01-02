@@ -8,10 +8,10 @@ param(
 )
 
 $WinDivertPath = "C:\WinDivert-2.2.2-A"
-$SourcePath = "src"
+$SourcePath = "Windows\src"
 $SourceFile = "ProxyBridge.c"
 $OutputDLL = "ProxyBridgeCore.dll"
-$OutputDir = "output"
+$OutputDir = "Windows\output"
 
 $SignTool = "signtool.exe"
 $CertThumbprint = ""
