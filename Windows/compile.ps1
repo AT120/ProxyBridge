@@ -9,6 +9,9 @@ param(
 
 $WinDivertPath = "C:\WinDivert-2.2.2-A"
 $SourcePath = "Windows\src"
+$InstallerPath = "Windows\installer"
+$GuiPath = "Windows\gui"
+$CliPath = "Windows\cli"
 $SourceFile = "ProxyBridge.c"
 $OutputDLL = "ProxyBridgeCore.dll"
 $OutputDir = "Windows\output"
@@ -181,12 +184,12 @@ if ($success) {
     }
 
     Write-Host "`nPublishing GUI..." -ForegroundColor Green
-    $publishResult = dotnet publish gui/ProxyBridge.GUI.csproj -c Release -r win-x64 --self-contained -o gui/bin/Release/net9.0-windows/win-x64/publish 2>&1
+    $guiPublishPath = "$GuiPath\bin\Release\net9.0-windows\win-x64\publish"
+    $publishResult = dotnet publish "$GuiPath/ProxyBridge.GUI.csproj" -c Release -r win-x64 --self-contained -o $guiPublishPath 2>&1
     if ($LASTEXITCODE -eq 0) {
         Write-Host "  GUI published successfully" -ForegroundColor Gray
 
         Write-Host "`nCopying GUI files to output..." -ForegroundColor Green
-        $guiPublishPath = "gui\bin\Release\net9.0-windows\win-x64\publish"
 
         Copy-Item "$guiPublishPath\ProxyBridge.exe" -Destination $OutputDir -Force
         Write-Host "  Copied: ProxyBridge.exe" -ForegroundColor Gray
@@ -201,13 +204,11 @@ if ($success) {
     }
 
     Write-Host "`nPublishing CLI..." -ForegroundColor Green
-    $publishResult = dotnet publish cli/ProxyBridge.CLI.csproj -c Release -r win-x64 --self-contained -o cli/bin/Release/net9.0-windows/win-x64/publish 2>&1
+    $cliPublishPath = "$CliPath\bin\Release\net9.0-windows\win-x64\publish"
+    $publishResult = dotnet publish "$CliPath/ProxyBridge.CLI.csproj" -c Release -r win-x64 --self-contained -o $cliPublishPath 2>&1
     if ($LASTEXITCODE -eq 0) {
         Write-Host "  CLI published successfully" -ForegroundColor Gray
-
         Write-Host "`nCopying CLI files to output..." -ForegroundColor Green
-        $cliPublishPath = "cli\bin\Release\net9.0-windows\win-x64\publish"
-
         Copy-Item "$cliPublishPath\ProxyBridge_CLI.exe" -Destination $OutputDir -Force
         Write-Host "  Copied: ProxyBridge_CLI.exe" -ForegroundColor Gray
     } else {
@@ -249,14 +250,14 @@ if ($success) {
     Write-Host "`nBuilding installer..." -ForegroundColor Green
     $nsisPath = "C:\Program Files (x86)\NSIS\Bin\makensis.exe"
     if (Test-Path $nsisPath) {
-        Push-Location installer
+        Push-Location $InstallerPath
         $result = & $nsisPath "ProxyBridge.nsi" 2>&1
         Pop-Location
         if ($LASTEXITCODE -eq 0) {
             Write-Host "  Installer created successfully" -ForegroundColor Green
-            $installerName = "ProxyBridge-Setup-3.0.0.exe"
-            if (Test-Path "installer\$installerName") {
-                Move-Item "installer\$installerName" -Destination $OutputDir -Force
+            $installerName = "ProxyBridge-Setup-3.0.0-dev.exe"
+            if (Test-Path "$InstallerPath\$installerName") {
+                Move-Item "$InstallerPath\$installerName" -Destination $OutputDir -Force
                 Write-Host "  Moved: $installerName -> $OutputDir\" -ForegroundColor Gray
 
                 if (-not $NoSign) {
