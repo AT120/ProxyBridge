@@ -38,6 +38,11 @@ jobs:
         choco install nsis -y
       shell: pwsh
 
+    - name: Install NSIS unicode plugins      
+      uses: negrutiu/nsis-install-plugin@v1
+      with:
+        url: https://nsis.sourceforge.io/mediawiki/images/3/3d/Unicode_V1.2.zip
+
     - name: Download WinDivert
       run: |
         $url = "https://github.com/basil00/Divert/releases/download/v2.2.2/WinDivert-2.2.2-A.zip"
