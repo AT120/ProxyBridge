@@ -255,7 +255,7 @@ if ($success) {
         Pop-Location
         if ($LASTEXITCODE -eq 0) {
             Write-Host "  Installer created successfully" -ForegroundColor Green
-            $installerName = "ProxyBridge-Setup-3.0.0-dev.exe"
+            $installerName = "ProxyBridge-Setup-3.0.0.exe"
             if (Test-Path "$InstallerPath\$installerName") {
                 Move-Item "$InstallerPath\$installerName" -Destination $OutputDir -Force
                 Write-Host "  Moved: $installerName -> $OutputDir\" -ForegroundColor Gray
